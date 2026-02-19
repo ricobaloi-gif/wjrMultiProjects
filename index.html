@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WJR multi projects | engineering solutions</title>
+    <!-- Font Awesome 5 (free) for clean icons -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #FDFDFE;  /* light background */
+            color: #10100E;              /* near black text */
+            line-height: 1.5;
+            overflow-x: hidden;
+            position: relative;
+            padding-top: 60px; /* space for fixed ribbon */
+        }
+
+        /* particles container – floating, subtle, not too many */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none; /* allows clicking through */
+            opacity: 0.5;
+        }
+
+        /* --- FIXED TOP RIBBON (always stay at the top) --- */
+        .top-ribbon {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #2C29A0; /* primary */
+            color: white;
+            padding: 0.5rem 2rem;
+            z-index: 1000;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            backdrop-filter: blur(8px);
+            background: rgba(44, 41, 160, 0.95);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-bottom: 2px solid #FDFDFE;
+        }
+        .ribbon-left {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .ribbon-left span i {
+            margin-right: 0.4rem;
+            opacity: 0.9;
+        }
+        .ribbon-right {
+            display: flex;
+            gap: 1rem;
+        }
+        .ribbon-right a {
+            color: white;
+            background: rgba(255,255,255,0.15);
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: 0.15s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .ribbon-right a:hover {
+            background: white;
+            color: #2C29A0;
+        }
+
+        /* main wrapper to stack above particles */
+        .content-wrapper {
+            position: relative;
+            z-index: 5;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 1rem 2rem 3rem;
+            background-color: transparent;
+        }
+
+        /* --- color variables (your palette) --- */
+        :root {
+            --primary: #2C29A0;      /* deep indigo */
+            --secondary-dark: #10100E; /* almost black */
+            --gray-medium: #5A5A5B;
+            --gray-light: #AFB2BF;
+            --bg-offwhite: #FDFDFE;
+        }
+
+        /* typography */
+        h1, h2, h3 {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            border-left: 6px solid var(--primary);
+            padding-left: 1rem;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* header / logo area (now with actual image 1.png) */
+        .navbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            background: rgba(253, 253, 254, 0.75);
+            backdrop-filter: blur(4px);
+            padding: 0.8rem 1.5rem;
+            border-radius: 60px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.02);
+            border: 1px solid var(--gray-light);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        /* image logo replaced: now using img tag with 1.png */
+        .logo-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 0 2px var(--bg-offwhite);
+            background: white;
+        }
+        .logo-image img {
+            max-width: 75%;
+            max-height: 75%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* fallback if image missing, but we keep the img element */
+
+        .company-badge {
+            display: flex;
+            flex-direction: column;
+        }
+        .company-badge .reg {
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+        }
+        .company-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--primary);
+        }
+        .company-name span {
+            font-weight: 300;
+            color: var(--secondary-dark);
+            font-size: 1.2rem;
+        }
+
+        .cidb {
+            background: var(--primary);
+            color: white;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            border: 2px solid white;
+        }
+
+        /* cards / sections */
+        .section-card {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(3px);
+            border-radius: 32px;
+            padding: 2rem 2.2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.1);
+            border: 1px solid rgba(175, 178, 191, 0.3);
+            transition: 0.2s;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .highlight-box {
+            background: var(--bg-offwhite);
+            border-radius: 24px;
+            padding: 1.5rem;
+            border: 1px solid var(--gray-light);
+            color: var(--secondary-dark);
+        }
+
+        .highlight-box strong {
+            color: var(--primary);
+        }
+
+        .data-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0.7rem 0;
+            border-bottom: 1px dashed var(--gray-light);
+            padding-bottom: 0.5rem;
+        }
+        .data-label {
+            width: 130px;
+            font-weight: 600;
+            color: var(--gray-medium);
+        }
+        .data-value {
+            flex: 1;
+            color: var(--secondary-dark);
+        }
+
+        /* service grid */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .service-item {
+            background: var(--bg-offwhite);
+            padding: 0.8rem 1.2rem;
+            border-radius: 40px;
+            border: 1px solid var(--gray-light);
+            font-size: 0.95rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.15s;
+            color: #10100E;
+        }
+        .service-item i {
+            color: var(--primary);
+            width: 1.5rem;
+            font-size: 1.1rem;
+        }
+        .service-item:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .service-item:hover i {
+            color: white;
+        }
+
+        /* accreditation area – now with only two images: 2.png and 3.png */
+        .accreditation-logos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2.5rem;
+            align-items: center;
+            margin: 1.5rem 0 0.5rem;
+        }
+        .accred-image-box {
+            width: 150px;
+            height: 100px;
+            background: #ffffff;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--primary);
+            box-shadow: 0 8px 16px -6px rgba(44,41,160,0.2);
+            padding: 0.5rem;
+            transition: transform 0.2s ease;
+        }
+        .accred-image-box:hover {
+            transform: scale(1.02);
+            border-color: var(--primary);
+        }
+        .accred-image-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* contact & footer */
+        .contact-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2.5rem;
+            margin-top: 1rem;
+        }
+        .contact-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(175, 178, 191, 0.2);
+            padding: 0.6rem 1.4rem;
+            border-radius: 60px;
+        }
+        .contact-detail i {
+            color: var(--primary);
+            font-size: 1.2rem;
+            width: 1.8rem;
+        }
+
+        .footer-note {
+            margin-top: 3rem;
+            text-align: center;
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--gray-light);
+            padding-top: 2rem;
+        }
+
+        /* ethics chips */
+        .ethics-list {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .ethics-chip {
+            background: var(--primary);
+            color: white;
+            padding: 0.4rem 1.6rem;
+            border-radius: 60px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            box-shadow: 0 4px 8px rgba(44,41,160,0.2);
+        }
+
+        /* small adjustments */
+        .mt-2 { margin-top: 1rem; }
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @media (max-width: 700px) {
+            .profile-grid { grid-template-columns: 1fr; }
+            .navbar { flex-direction: column; align-items: start; gap: 1rem; }
+            .top-ribbon { flex-direction: column; gap: 0.3rem; align-items: start; }
+            body { padding-top: 90px; }
+        }
+
+        /* remove any veteran reference – omitted entirely */
+    </style>
+    <!-- lightweight particles library -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body>
+    <!-- FIXED TOP RIBBON (always visible) -->
+    <div class="top-ribbon">
+        <div class="ribbon-left">
+            <span><i class="fas fa-check-circle" style="color: #AFB2BF;"></i> CIDB Grade 1</span>
+            <span><i class="fas fa-map-marker-alt"></i> Pretoria, Gauteng</span>
+            <span><i class="far fa-registered"></i> 2017/096825/07</span>
+        </div>
+        <div class="ribbon-right">
+            <a href="#accreditation"><i class="fas fa-award"></i> Accreditations</a>
+            <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+        </div>
+    </div>
+
+    <!-- fixed particles container (cool floating but not too many) -->
+    <div id="particles-js"></div>
+
+    <div class="content-wrapper">
+        <!-- header with logo image (1.png) as requested -->
+        <div class="navbar">
+            <div class="logo-area">
+                <!-- logo image using 1.png (you saved image as 1.png) -->
+                <div class="logo-image">
+                    <img src="1.png" alt="WJR logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-cogs\' style=\'font-size:2rem;color:#2C29A0;\'></i>'">
+                </div>
+                <div class="company-badge">
+                    <div class="reg">Reg: 2017/096825/07</div>
+                    <div class="company-name">WJR <span>multi projects</span></div>
+                </div>
+            </div>
+            <div class="cidb">
+                <i class="fas fa-hard-hat" style="margin-right: 6px;"></i>CIDB GRD 1
+            </div>
+        </div>
+
+        <!-- ABOUT US + profile data (military vet OWNED removed per request) -->
+        <div class="section-card">
+            <div class="profile-grid">
+                <div>
+                    <h2>About us</h2>
+                    <p style="font-size: 1.1rem; margin-bottom: 1.2rem;"><strong>WJR multi projects</strong> is 100% Black Owned and was founded in 2017 by Mr Mzilikazi Wilford Baloi as sole Director. The head office is based in Gauteng Pretoria, and we are planning to expand to have footprint across all the provinces of the country.</p>
+                    <p>WJR is an engineering company specialising in Electrical and Mechanical engineering for both Industrial; Commercial and Domestic infrastructures. Our resources allow us to execute and complete projects within budget and time viz: Installation of HVAC, Electrical panels, Installation and Commisioning of garage and gate motors, installation of solar panels, Air-condissioning, all mechanical works and Civil works.</p>
+                </div>
+                <div class="highlight-box">
+                    <div class="data-row"><span class="data-label">Established</span><span class="data-value">March 2017</span></div>
+                    <div class="data-row"><span class="data-label">Reg no.</span><span class="data-value">2017/096825/07</span></div>
+                    <div class="data-row"><span class="data-label">VAT no.</span><span class="data-value">N/A</span></div>
+                    <div class="data-row"><span class="data-label">Tax no.</span><span class="data-value">IT-9157126237</span></div>
+                    <div class="data-row"><span class="data-label">CIDB</span><span class="data-value">Grade 1</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISION + MISSION side by side -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+            <div class="section-card" style="margin:0;">
+                <h2 style="font-size: 1.8rem;">Our Vision</h2>
+                <p style="font-size: 1.1rem;">To be one of the competetive and powerful source of problem solving in engineering. Provide tailor solution proffesionaly, safely on time and within budget. Empower our youth and community within our area of operation.</p>
+            </div>
+            <div class="section-card" style="margin:0;">
+                <h2 style="font-size: 1.8rem;">Our Mission</h2>
+                <ul style="margin-left: 1.5rem; color: var(--secondary-dark);">
+                    <li>Source and acquire adequately qualified and experienced resources.</li>
+                    <li>Continous training and improvement of our personnel and resources.</li>
+                    <li>Adhere to OSH act and all relevant safety rules and regulations and the laws of the country.</li>
+                    <li>Employ best practices in meeting our client’s standards and specifications.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ETHICS + simple row -->
+        <div class="section-card">
+            <div class="flex-row">
+                <h2 style="margin-bottom: 0.5rem;">Ethics</h2>
+                <div class="ethics-list">
+                    <span class="ethics-chip">Transparency</span>
+                    <span class="ethics-chip">Honesty</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SERVICES (detailed) -->
+        <div class="section-card">
+            <h2>Services</h2>
+            <div class="service-grid">
+                <div class="service-item"><i class="fas fa-wind"></i> Installation of HVAC</div>
+                <div class="service-item"><i class="fas fa-bolt"></i> Electrical panels & lights</div>
+                <div class="service-item"><i class="fas fa-car"></i> Garage & gate motors</div>
+                <div class="service-item"><i class="fas fa-solar-panel"></i> Installation of solar panels</div>
+                <div class="service-item"><i class="far fa-snowflake"></i> Air-conditioning (install/maintain)</div>
+                <div class="service-item"><i class="fas fa-tools"></i> Commissioning / De-commissioning</div>
+                <div class="service-item"><i class="fas fa-cog"></i> All mechanical works</div>
+                <div class="service-item"><i class="fas fa-draw-polygon"></i> Civil works</div>
+            </div>
+            <h3 style="margin: 2rem 0 0.5rem; color: var(--primary);">Other services</h3>
+            <div class="service-grid" style="grid-template-columns: repeat(auto-fill, minmax(150px,1fr));">
+                <div class="service-item"><i class="fas fa-paint-brush"></i> Painting</div>
+                <div class="service-item"><i class="fas fa-wrench"></i> Plumbing</div>
+                <div class="service-item"><i class="fas fa-chair"></i> Supply office equipments</div>
+                <div class="service-item"><i class="fas fa-clipboard-list"></i> Project Management</div>
+            </div>
+        </div>
+
+        <!-- ACCREDITATION & MEMBER ASSOCIATION (now with only 2 images: 2.png and 3.png) -->
+        <div class="section-card" id="accreditation">
+            <h2>Accreditation & Member Association</h2>
+            
+            <div class="accreditation-logos">
+                <!-- exactly two image placeholders: 2.png and 3.png -->
+                <div class="accred-image-box">
+                    <img src="2.png" alt="Accreditation 2" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-award\' style=\'font-size:2.5rem;color:#2C29A0;\'></i><span style=\'margin-top:5px;\'>Accred 2</span>'">
+                </div>
+                <div class="accred-image-box">
+                    <img src="3.png" alt="Accreditation 3" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-certificate\' style=\'font-size:2.5rem;color:#2C29A0;\'></i><span style=\'margin-top:5px;\'>Member 3</span>'">
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- CONTACT US (with anchor) -->
+        <div class="section-card" id="contact">
+            <h2>Contact us</h2>
+            <div class="contact-row">
+                <div class="contact-detail"><i class="fas fa-map-marker-alt"></i> HEAD OFFICE: 20 Mopani ave, Boordfontein, Akasia, 0182</div>
+                <div class="contact-detail"><i class="fas fa-phone-alt"></i> 063 084 0860</div>
+                <div class="contact-detail"><i class="fas fa-envelope"></i> mzilikazibaloi@yahoo.com</div>
+            </div>
+        </div>
+
+        <!-- small footer with registration note -->
+        <div class="footer-note">
+            <span>© 2025 WJR multi projects · Reg: 2017/096825/07 · Tax no. IT-9157126237</span>
+        </div>
+    </div>
+
+    <!-- initialize particles (cool, floating, not too many) -->
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 500,            // low count – not too many
+                    "density": {
+                        "enable": true,
+                        "value_area": 1200
+                    }
+                },
+                "color": {
+                    "value": ["#2C29A0", "#5A5A5B", "#AFB2BF"]  // using your palette
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    }
+                },
+                "opacity": {
+                    "value": 0.35,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 0.8,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 4,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 3,
+                        "size_min": 0.3,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 180,
+                    "color": "#AFB2BF",
+                    "opacity": 0.18,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 1.2,
+                    "direction": "none",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 600
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 200,
+                        "line_linked": {
+                            "opacity": 0.5
+                        }
+                    },
+                    "push": {
+                        "particles_nb": 3
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+    <!-- military veteran owned text completely omitted as requested -->
+</body>
+</html>
